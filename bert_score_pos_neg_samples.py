@@ -3,6 +3,7 @@ from nltk.corpus import wordnet
 import numpy as np
 import csv
 from evaluate import load
+import time
 
 def indexMany(s,str):
     length = len(s)
@@ -115,7 +116,7 @@ if __name__ == '__main__':
 
     for split in splits:
         file_name = 'after_amt_after_MC_process_how_after_sort_' + split + '.csv'
-        out_path = 'after_amt_after_MC_process_how_after_sort_after_pos_order_byaction_bert0.75_0.5' + split + '.csv'
+        out_path = 'after_amt_after_MC_process_how_after_sort_after_pos_order_bylemma_bert0.75_0.5' + split + '.csv'
         action_dict = {}
         action_dict_ans = {}
         pair_dict_pos = {}
@@ -128,7 +129,7 @@ if __name__ == '__main__':
             if line[0] != 'video_id':
                 id += 1
                 # line[13] action, line[14] lemma. line[15] lemma id
-                Q, A, action = line[4], line[int(line[5]) + 8], line[13]
+                Q, A, action = line[4], line[int(line[5]) + 8], line[14]
                 line.append(id)
                 line_list.append(line)
                 if action not in action_dict.keys():
@@ -138,13 +139,16 @@ if __name__ == '__main__':
                     action_dict[action].append((id, line))
                     action_dict_ans[action].append(A)
 
-
+        cnt = 0
+        start_time = time.time()
         for action in action_dict_ans.keys():
             for i, A in enumerate(action_dict_ans[action]):
                 for j, A_pair in enumerate(action_dict_ans[action][i+1:]):
 
                     # value_wups = get_wups(A, A_pair, 0)
                     value = bert_score(A, A_pair)
+                    cnt +=1
+                    print(cnt, time.time()-start_time)
 
                     id1, id2 = action_dict[action][i][0], action_dict[action][i + j + 1][0]
                     if id1 not in pair_dict_line.keys():
