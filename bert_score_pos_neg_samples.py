@@ -23,7 +23,14 @@ def indexMany(s,str):
     return list
 
 
-
+def process_id_list(id_list):
+    output_str = ''
+    if len(id_list) > 0:
+        for id in id_list[:-1]:
+            output_str += str(id)
+            output_str += '/'
+        output_str += str(id_list[-1])
+    return output_str
 
 
 
@@ -116,7 +123,7 @@ if __name__ == '__main__':
 
     for split in splits:
         file_name = 'after_amt_after_MC_process_how_after_sort_' + split + '.csv'
-        out_path = 'after_amt_after_MC_process_how_after_sort_after_pos_order_bylemma_bert0.75_0.5' + split + '.csv'
+        out_path = 'after_amt_after_MC_process_how_after_sort_after_pos_order_byaction_bert0.75_0.5' + split + '.csv'
         action_dict = {}
         action_dict_ans = {}
         pair_dict_pos = {}
@@ -129,7 +136,7 @@ if __name__ == '__main__':
             if line[0] != 'video_id':
                 id += 1
                 # line[13] action, line[14] lemma. line[15] lemma id
-                Q, A, action = line[4], line[int(line[5]) + 8], line[14]
+                Q, A, action = line[4], line[int(line[5]) + 8], line[13]
                 line.append(id)
                 line_list.append(line)
                 if action not in action_dict.keys():
